@@ -360,8 +360,26 @@
         display: none !important;
       }
 
-      main, #tab-preview, #preview-wrapper, #sheets-container,
-      #tab-attendance, #attendance-wrapper, #attendance-sheets-container {
+      /* Aturan Eksklusif Cetak: Hanya tampilkan mode cetak yang dipilih */
+      body.print-only-cards #tab-attendance,
+      body.print-only-cards #attendance-wrapper,
+      body.print-only-cards #attendance-sheets-container {
+        display: none !important;
+      }
+
+      body.print-only-attendance #tab-preview,
+      body.print-only-attendance #preview-wrapper,
+      body.print-only-attendance #sheets-container {
+        display: none !important;
+      }
+
+      main,
+      body.print-only-cards #tab-preview,
+      body.print-only-cards #preview-wrapper,
+      body.print-only-cards #sheets-container,
+      body.print-only-attendance #tab-attendance,
+      body.print-only-attendance #attendance-wrapper,
+      body.print-only-attendance #attendance-sheets-container {
         display: block !important;
         position: static !important;
         width: 100% !important;
@@ -1414,6 +1432,8 @@
     function printExamCards() {
       switchTab("preview");
       setPreviewZoom(1);
+      document.body.classList.remove("print-only-attendance");
+      document.body.classList.add("print-only-cards");
       setTimeout(() => {
         window.print();
       }, 150);
@@ -1421,18 +1441,31 @@
 
     function printAttendanceList() {
       switchTab("attendance");
+      document.body.classList.remove("print-only-cards");
+      document.body.classList.add("print-only-attendance");
       setTimeout(() => {
         window.print();
       }, 150);
     }
 
+    // Pastikan jika pengguna menekan Ctrl+P langsung, hanya tab aktif yang tercetak
+    window.addEventListener("beforeprint", () => {
+      if (activeTabName === "attendance") {
+        document.body.classList.remove("print-only-cards");
+        document.body.classList.add("print-only-attendance");
+      } else {
+        document.body.classList.remove("print-only-attendance");
+        document.body.classList.add("print-only-cards");
+      }
+    });
+
     /* =========================================================================
-       6. RENDER KARTU & PAGINASI HALAMAN CETAK (8 KARTU / HALAMAN)
+       6. FILTER RUANG & RENDER KARTU PESERTA UJIAN
        ========================================================================= */
     function updateRoomFilterOptions() {
       const select = document.getElementById("filter-room");
       const currentVal = select.value;
-      const rooms = [...new Set(students.map((s) => (s.ruang || "RUANG 1").trim().toUpperCase()))].sort();
+      const rooms = Array.from(new Set(students.map((s) => (s.ruang || "RUANG 1").trim().toUpperCase()))).sort();
 
       select.innerHTML = `<option value="ALL">Semua Ruang (${students.length})</option>`;
       rooms.forEach((r) => {
