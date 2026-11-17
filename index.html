@@ -475,9 +475,14 @@
           <span>Ekspor Excel</span>
         </button>
 
-        <button onclick="triggerPrint()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-md">
-          <i class="fa-solid fa-print"></i>
-          <span id="header-print-label">Cetak Kartu / PDF</span>
+        <button onclick="printExamCards()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-id-card"></i>
+          <span>Cetak Kartu</span>
+        </button>
+
+        <button onclick="printAttendanceList()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>Cetak Daftar Hadir</span>
         </button>
       </div>
     </div>
@@ -616,7 +621,7 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="triggerPrint()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5">
+          <button onclick="printAttendanceList()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5">
             <i class="fa-solid fa-print"></i>
             <span>Cetak Daftar Hadir</span>
           </button>
@@ -1392,11 +1397,6 @@
         }
       });
 
-      const printLabel = document.getElementById("header-print-label");
-      if (printLabel) {
-        printLabel.textContent = tabName === "attendance" ? "Cetak Daftar Hadir" : "Cetak Kartu / PDF";
-      }
-
       if (tabName === "preview") {
         renderPrintSheets();
       } else if (tabName === "attendance") {
@@ -1411,13 +1411,16 @@
       container.style.transform = `scale(${scale})`;
     }
 
-    function triggerPrint() {
-      if (activeTabName === "attendance") {
-        switchTab("attendance");
-      } else {
-        switchTab("preview");
-        setPreviewZoom(1);
-      }
+    function printExamCards() {
+      switchTab("preview");
+      setPreviewZoom(1);
+      setTimeout(() => {
+        window.print();
+      }, 150);
+    }
+
+    function printAttendanceList() {
+      switchTab("attendance");
       setTimeout(() => {
         window.print();
       }, 150);
