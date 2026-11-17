@@ -321,12 +321,14 @@
       text-align: left;
       padding-left: 3mm !important;
       font-size: 9.5pt;
+      white-space: nowrap;
     }
 
     .sig-zigzag-right {
       text-align: left;
-      padding-left: 28mm !important;
+      padding-left: 24mm !important;
       font-size: 9.5pt;
+      white-space: nowrap;
     }
 
     /* Custom Scrollbar */
@@ -1678,7 +1680,7 @@
                   <td style="text-align: center; width: 11mm;">${num}.</td>
                   <td style="font-weight: 700; text-transform: uppercase;">${escapeHTML(stu.nama)}</td>
                   <td style="text-align: center; width: 42mm;">${escapeHTML(stu.noPeserta)}</td>
-                  <td class="${sigCellClass}" style="width: 56mm;">${num}. ............................</td>
+                  <td class="${sigCellClass}" style="width: 56mm;">${num}. ......................</td>
                 </tr>
               `;
             })
